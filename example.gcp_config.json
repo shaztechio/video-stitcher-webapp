@@ -1,0 +1,8 @@
+{
+  "projectId": "your-gcp-project-id",
+  "region": "us-west1",
+  "server-serviceName": "video-stitch-server",
+  "client-serviceName": "video-stitch-client",
+  "clientId": "your-google-oauth-client-id",
+  "allowedUsers": "user1@example.com;user2@example.com"
+}

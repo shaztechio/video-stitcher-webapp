@@ -1,0 +1,3 @@
+node_modules/
+coverage
+gcp_config.json

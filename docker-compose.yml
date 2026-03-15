@@ -1,0 +1,26 @@
+
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server/uploads:/app/uploads
+      - ./server/output:/app/output
+    environment:
+      - OUTPUT_RETENTION_MINUTES=5 # 5 minutes
+      - DISABLE_AUTH=true # Set to 'true' to bypass Google Auth locally
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      args:
+        - VITE_API_URL=http://localhost:3000
+        - VITE_DISABLE_AUTH=true
+    ports:
+      - "8080:80"
+    depends_on:
+      - server
+    restart: unless-stopped

@@ -1,0 +1,103 @@
+name: Deploy to Google Cloud Run
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Server + Client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Enable required GCP APIs
+        run: |
+          gcloud services enable \
+            run.googleapis.com \
+            cloudbuild.googleapis.com \
+            artifactregistry.googleapis.com \
+            --project ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Deploy Server
+        run: |
+          gcloud run deploy ${{ vars.GCP_SERVER_SERVICE }} \
+            --source ./server \
+            --region ${{ vars.GCP_REGION }} \
+            --project ${{ vars.GCP_PROJECT_ID }} \
+            --allow-unauthenticated \
+            --memory 2Gi \
+            --timeout 900 \
+            --session-affinity \
+            --set-env-vars "OUTPUT_RETENTION_MINUTES=10,ALLOWED_USERS=${{ vars.ALLOWED_USERS }}"
+
+      - name: Get Server URL
+        id: server
+        run: |
+          url=$(gcloud run services describe ${{ vars.GCP_SERVER_SERVICE }} \
+            --region ${{ vars.GCP_REGION }} \
+            --project ${{ vars.GCP_PROJECT_ID }} \
+            --format 'value(status.url)')
+          echo "url=$url" >> $GITHUB_OUTPUT
+
+      - name: Build Client image via Cloud Build
+        run: |
+          IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLIENT_SERVICE }}"
+          cat > /tmp/cloudbuild.yaml <<EOF
+          steps:
+          - name: 'gcr.io/cloud-builders/docker'
+            args:
+              - build
+              - -t
+              - '$IMAGE'
+              - --build-arg
+              - 'VITE_API_URL=${{ steps.server.outputs.url }}'
+              - --build-arg
+              - 'VITE_GOOGLE_CLIENT_ID=${{ vars.GOOGLE_CLIENT_ID }}'
+              - .
+          images:
+          - '$IMAGE'
+          EOF
+          gcloud builds submit ./client \
+            --config /tmp/cloudbuild.yaml \
+            --project ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Deploy Client
+        run: |
+          IMAGE="gcr.io/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_CLIENT_SERVICE }}"
+          gcloud run deploy ${{ vars.GCP_CLIENT_SERVICE }} \
+            --image $IMAGE \
+            --region ${{ vars.GCP_REGION }} \
+            --project ${{ vars.GCP_PROJECT_ID }} \
+            --allow-unauthenticated \
+            --port 80
+
+      - name: Get Client URL
+        id: client
+        run: |
+          url=$(gcloud run services describe ${{ vars.GCP_CLIENT_SERVICE }} \
+            --region ${{ vars.GCP_REGION }} \
+            --project ${{ vars.GCP_PROJECT_ID }} \
+            --format 'value(status.url)')
+          echo "url=$url" >> $GITHUB_OUTPUT
+
+      - name: Job Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## Deployment Complete 🎉
+          | Service | URL |
+          |---------|-----|
+          | Web Client | ${{ steps.client.outputs.url }} |
+          | API Server | ${{ steps.server.outputs.url }} |
+
+          > ⚠️ Add the Client URL to **Authorized JavaScript origins** in Google Cloud Console (OAuth consent screen).
+          EOF

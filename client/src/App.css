@@ -1,0 +1,396 @@
+:root {
+  --primary-color: #646cff;
+  --bg-color: #242424;
+  --text-color: rgba(255, 255, 255, 0.87);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+#root {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+
+.file-list {
+  background: #333;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: left;
+}
+
+.global-duration-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.global-duration-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.global-duration-row input {
+  width: 5.5ch;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid #666;
+  background: #555;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.file-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background: #444;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  cursor: grab;
+}
+
+.file-item.dragging {
+  opacity: 0.4;
+}
+
+.file-item.drag-over {
+  background: #4a4a5a;
+  outline: 2px solid var(--primary-color);
+}
+
+.drag-handle {
+  color: #888;
+  font-size: 1rem;
+  padding-right: 4px;
+  flex-shrink: 0;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.image-duration {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: #aaa;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.image-duration input.invalid {
+  border-color: #ff6b6b;
+  outline-color: #ff6b6b;
+}
+
+.image-duration input {
+  width: 5.5ch;
+  padding: 2px 4px;
+  border-radius: 3px;
+  border: 1px solid #666;
+  background: #555;
+  color: white;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.file-size {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+.file-actions {
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.file-actions button {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0 5px;
+}
+
+.file-actions button:hover {
+  color: white;
+}
+
+.file-actions button.remove-btn {
+  color: #ff6b6b;
+}
+
+.stitch-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.stitch-btn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.progress-section {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 10px;
+  background: #444;
+  border-radius: 5px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.progress-bar-fill.processing {
+  background-color: #4caf50;
+}
+
+.result-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.download-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.download-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.preview-video {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  margin-top: 10px;
+}
+
+.warn-message {
+  color: #f0a500;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(240, 165, 0, 0.1);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.error-message {
+  color: #ff6b6b;
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(255, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.retention-warning {
+  color: #ffd43b;
+  font-size: 0.9rem;
+  margin: 5px 0;
+  background: rgba(255, 212, 59, 0.1);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border-left: 3px solid #ffd43b;
+}
+
+.header-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.auth-btn {
+  background: transparent;
+  border: 1px solid #666;
+  color: #ccc;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: #333;
+  border-radius: 12px;
+}
+
+.login-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.bg-audio-section {
+  background: #333;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.bg-audio-pick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border: 1px dashed #555;
+  border-radius: 6px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.bg-audio-pick-btn:hover {
+  color: #ccc;
+  border-color: #888;
+}
+
+.bg-audio-selected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bg-audio-icon {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.bg-audio-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  font-size: 0.9rem;
+}
+
+.bg-audio-size {
+  color: #999;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.bg-audio-volume {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+.bg-audio-volume input[type="range"] {
+  width: 100px;
+  accent-color: var(--primary-color);
+}
+
+.bg-audio-volume-value {
+  min-width: 2.5ch;
+  color: #ccc;
+}
+
+.bg-audio-volume-hint {
+  color: #888;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.bg-audio-section.bg-audio-drag-over {
+  outline: 2px dashed var(--primary-color);
+  background: #3a3a4a;
+}
+
+.bg-audio-section.bg-audio-drag-over .bg-audio-pick-btn {
+  color: #ccc;
+  border-color: var(--primary-color);
+}

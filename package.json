@@ -1,0 +1,14 @@
+{
+  "name": "@shaztech/video-stitcher-webapp",
+  "version": "1.0.0",
+  "description": "Web app for stitching videos and images together using FFmpeg",
+  "scripts": {
+    "dev": "concurrently --names \"server,client\" --prefix-colors \"cyan,magenta\" \"npm --prefix server start\" \"npm --prefix client run dev\"",
+    "test": "concurrently --names \"server,client\" --prefix-colors \"cyan,magenta\" \"npm --prefix server test\" \"npm --prefix client test\"",
+    "set-secret": "node scripts/set-gcp-secret.js",
+    "set-vars": "node scripts/set-github-vars.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
