@@ -1,5 +1,7 @@
 # video-stitcher — Web App
 
+[![CI](https://github.com/shazron/video-stitcher-webapp/actions/workflows/ci.yml/badge.svg)](https://github.com/shazron/video-stitcher-webapp/actions/workflows/ci.yml)
+
 A web application to stitch videos and images into a single MP4 using FFmpeg.
 
 For the CLI tool, see [video-stitcher](https://github.com/shaztechio/video-stitcher).
