@@ -9,6 +9,10 @@
     "set-vars": "node scripts/set-github-vars.js",
     "version": "node scripts/version-sync.js && git add client/package.json server/package.json"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shaztechio/video-stitcher-webapp"
+  },
   "type": "module",
   "devDependencies": {
     "concurrently": "^9.1.2"
