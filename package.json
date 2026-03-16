@@ -1,6 +1,6 @@
 {
   "name": "@shaztech/video-stitcher-webapp",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Web app for stitching videos and images together using FFmpeg",
   "scripts": {
     "dev": "concurrently --names \"server,client\" --prefix-colors \"cyan,magenta\" \"npm --prefix server start\" \"npm --prefix client run dev\"",
