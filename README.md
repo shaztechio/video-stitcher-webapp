@@ -2,7 +2,7 @@
 
 A web application to stitch videos and images into a single MP4 using FFmpeg.
 
-For the CLI tool, see [video-stitcher](https://github.com/shazron/video-stitcher).
+For the CLI tool, see [video-stitcher](https://github.com/shaztechio/video-stitcher).
 
 ## Prerequisites
 
