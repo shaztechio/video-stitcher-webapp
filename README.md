@@ -172,6 +172,78 @@ After the first deployment, add the client URL to your Google OAuth client so si
 
 > This step is required once after the first deployment, and again only if the Cloud Run URL ever changes.
 
+### Map a Custom Domain (Limited Availability / Preview)
+
+Cloud Run supports [domain mapping](https://cloud.google.com/run/docs/mapping-custom-domains) to serve your client from a custom domain with an automatically provisioned and renewed HTTPS certificate.
+
+> **Note:** Domain mapping is in **Preview** and only available in select regions: `asia-east1`, `asia-northeast1`, `asia-southeast1`, `europe-north1`, `europe-west1`, `europe-west4`, `us-central1`, `us-east1`, `us-east4`, `us-west1`. For other regions, use a load balancer or Firebase Hosting instead.
+
+#### Prerequisites
+
+- A domain you own (from any registrar, or purchased via Google)
+- Domain ownership verified with Google Search Console
+
+Check verification status:
+
+```sh
+gcloud domains list-user-verified
+```
+
+If your domain is not listed, verify it:
+
+```sh
+gcloud domains verify YOUR-DOMAIN
+```
+
+#### 1. Create the domain mapping
+
+```sh
+gcloud beta run domain-mappings create \
+  --service video-stitch-client \
+  --domain YOUR-DOMAIN \
+  --region YOUR-REGION
+```
+
+To reassign a domain already mapped to another service, add `--force-override`.
+
+#### 2. Configure DNS records
+
+Retrieve the DNS records to add at your registrar:
+
+```sh
+gcloud beta run domain-mappings describe \
+  --domain YOUR-DOMAIN \
+  --region YOUR-REGION
+```
+
+Look for the `resourceRecords` section and add the returned `A`, `AAAA`, or `CNAME` records at your registrar:
+
+| Name | Type | Value |
+|------|------|-------|
+| `@` (root) or `www` | A / AAAA / CNAME | (from output above) |
+
+DNS propagation typically takes a few minutes to a few hours.
+
+#### 3. Wait for certificate provisioning
+
+Google automatically issues and renews an HTTPS certificate for your domain. This can take **15 minutes to 24 hours** after DNS propagates.
+
+#### 4. Update your OAuth authorized origins
+
+Once the custom domain is live, add it to your Google OAuth client (same as [Post-Deployment](#post-deployment-authorize-the-client-origin)):
+
+1. Go to **APIs & Services → Credentials** and click your OAuth 2.0 Client ID
+2. Under **Authorized JavaScript origins**, add your custom domain (e.g. `https://example.com`)
+3. Click **Save**
+
+#### Remove a domain mapping
+
+```sh
+gcloud beta run domain-mappings delete \
+  --domain YOUR-DOMAIN \
+  --region YOUR-REGION
+```
+
 ## Usage
 
 See [USAGE.md](./USAGE.md) on how to use the web app.
