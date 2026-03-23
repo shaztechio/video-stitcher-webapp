@@ -9,7 +9,7 @@ For the CLI tool, see [video-stitcher](https://github.com/shaztechio/video-stitc
 ## Prerequisites
 
 - Node.js 20+
-- FFmpeg installed and added to your system PATH
+- FFmpeg installed and added to your system PATH (see [INSTALLING_FFMPEG.md](./INSTALLING_FFMPEG.md))
 
 ## Getting Started
 
